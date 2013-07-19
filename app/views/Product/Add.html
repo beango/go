@@ -22,9 +22,13 @@
 		<div class="control-group">
 			<div class="control-label">目录</div>
 			<div class="controls">
-				<s:select list="#request.catelist" name="product.categoryID"
-					label="目录" listKey="categoryID" listValue="categoryName"
-					value="%{#request.product.getCategoryID()}"></s:select>
+				{{with $field := field "booking.Beds" .}}
+				<select name="{{$field.Name}}">
+				  {{option $field "1" "One king-size bed"}}
+				  {{option $field "2" "Two double beds"}}
+				  {{option $field "3" "Three beds"}}
+				</select>
+				{{end}}
 			</div>
 		</div>
 		<div class="control-group">
