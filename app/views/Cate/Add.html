@@ -1,0 +1,43 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/cate/catepost" method="post">
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<br>
+		<input type="hidden" name="cate.CategoryID" value="{{.cate.CategoryID}}" />
+		<div class="control-group">
+			<div class="control-label">目录名</div>
+			<div class="controls">
+				<input type="text" name="cate.CategoryName" value="{{.cate.CategoryName}}"></s:textfield>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">说明</div>
+			<div class="controls">
+				<input type="text" name="cate.Description" value="{{.cate.Description}}"></s:textfield>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn"
+				onclick="location.href='cate!list.action';return false;">取消</button>
+		</div>
+
+	</section>
+</div>
+</form>
+<script type="text/javascript">
+// wait for the DOM to be loaded
+$(document).ready(function() {
+	var ajaxProjectImageListOptions = {
+		dataType : 'json',
+		success : function(result) {
+			alert(result);
+			location.href = "/cate/list";
+		}
+	};
+	$('form').ajaxForm(ajaxProjectImageListOptions);
+});
+</script>

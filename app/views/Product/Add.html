@@ -1,0 +1,94 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/product/productpost" method="post">
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<input type="hidden" name="prod.ProductID" value="{{.prod.ProductID}}" />
+		<div class="control-group">
+			<div class="control-label">产品名称</div>
+			<div class="controls">
+				<input type="text" name="prod.ProductName" value="{{.prod.ProductName}}" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">供应商</div>
+			<div class="controls">
+				<input type="text" name="prod.SupplierID"
+					value="{{.prod.SupplierID}}" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">目录</div>
+			<div class="controls">
+				<s:select list="#request.catelist" name="product.categoryID"
+					label="目录" listKey="categoryID" listValue="categoryName"
+					value="%{#request.product.getCategoryID()}"></s:select>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">单位数量</div>
+			<div class="controls">
+				<input type="text" name="prod.QuantityPerUnit"
+					value="{{.prod.QuantityPerUnit}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">单价</div>
+			<div class="controls">
+				<input type="text" name="prod.UnitPrice"
+					value="{{.prod.UnitPrice}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">库存</div>
+			<div class="controls">
+				<input type="text" name="prod.UnitsInStock"
+					value="{{.prod.UnitsInStock}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">订购量</div>
+			<div class="controls">
+				<input type="text" name="prod.UnitsOnOrder"
+					value="{{.prod.UnitsOnOrder}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">再订购</div>
+			<div class="controls">
+				<input type="text" name="prod.ReorderLevel"
+					value="{{.prod.ReorderLevel}}"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">是否停产</div>
+			<div class="controls">
+				<s:radio list="#{1:'是',0:'否' }" name="product.discontinued"
+					label="是否停产" listKey="key" listValue="value"
+					value="%{#request.product.getDiscontinued()}" cssClass=""></s:radio>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn"
+				onclick="location.href='product!list.action';return false;">取消</button>
+		</div>
+
+	</section>
+</div>
+</form>
+<script type="text/javascript">
+// wait for the DOM to be loaded
+$(document).ready(function() {
+	var ajaxProjectImageListOptions = {
+		dataType : 'json',
+		success : function(result) {
+			alert(result);
+			location.href = "/product/list";
+		}
+	};
+	$('form').ajaxForm(ajaxProjectImageListOptions);
+});
+</script>

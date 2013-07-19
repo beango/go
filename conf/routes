@@ -1,0 +1,53 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+module:testrunner
+
+GET     /                                       App.Index
+
+GET     /login                                  App.Login
+POST    /user/userlog                           App.UserLog
+Get     /logoff                                 App.LogOff
+
+GET     /register                               UserAccount.Register
+POST    /register                               UserAccount.PostRegister
+
+GET     /user/add                               UserAccount.Add
+GET     /user/list                              UserAccount.List
+GET     /user/modify/:id                        UserAccount.Add
+POST    /user/userpost                          UserAccount.UserPost
+POST    /user/del                               UserAccount.Delete
+
+GET     /role/add                               Role.Add
+GET     /role/list                              Role.List
+GET     /role/modify/:id                        Role.Add
+POST    /role/rolepost                          Role.Post
+POST    /role/del                               Role.Delete
+
+GET     /auth/add                               Auth.Add
+GET     /auth/list                              Auth.List
+GET     /auth/modify/:id                        Auth.Add
+POST    /auth/authpost                          Auth.Post
+POST    /auth/del                               Auth.Delete
+
+GET     /cate/add                               Cate.Add
+GET     /cate/list                              Cate.List
+GET     /cate/modify/:id                        Cate.Add
+POST    /cate/catepost                          Cate.Post
+POST    /cate/del                               Cate.Delete
+
+GET     /product/add                            Product.Add
+GET     /product/list/:pageindex                Product.List
+GET     /product/modify/:id                     Product.Add
+POST    /product/productpost                    Product.Post
+POST    /product/del                            Product.Delete
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+
+# Catch all
+*       /:controller/:action                    :controller.:action

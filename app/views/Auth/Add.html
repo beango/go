@@ -1,0 +1,37 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/auth/authpost" method="post">
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<br>
+		<input type="hidden" name="auth.AuthID" value="{{.auth.AuthID}}"></s:hidden>
+		<div class="control-group">
+			<div class="control-label">权限名</div>
+			<div class="controls">
+				<input type="text" name="auth.AuthName" value="{{.auth.AuthName}}"></s:textfield>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn"
+				onclick="location.href='/auth/list';return false;">取消</button>
+		</div>
+
+	</section>
+</div>
+</form>
+<script type="text/javascript">
+// wait for the DOM to be loaded
+$(document).ready(function() {
+	var ajaxProjectImageListOptions = {
+		dataType : 'json',
+		success : function(result) {
+			alert(result);
+			location.href = "/auth/list";
+		}
+	};
+	$('form').ajaxForm(ajaxProjectImageListOptions);
+});
+</script>

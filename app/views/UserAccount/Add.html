@@ -1,0 +1,41 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/user/userpost" method="post">
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<input type="hidden" name="user.UserID" value="{{.entity.UserID}}" />
+		<div class="control-group">
+			<div class="control-label">用户名</div>
+			<div class="controls">
+				<input type="text" name="user.UserName" value="{{.entity.UserName}}" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">用户密码</div>
+			<div class="controls">
+				<input type="text" name="user.UserPwd" value="{{.entity.UserPwd}}" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn"
+				onclick="location.href='/user/list';return false;">取消</button>
+		</div>
+	</section>
+</div>
+</form>
+<script type="text/javascript">
+// wait for the DOM to be loaded
+$(document).ready(function() {
+	var ajaxProjectImageListOptions = {
+		dataType : 'json',
+		success : function(result) {
+			alert(result);
+			location.href = "/user/list";
+		}
+	};
+	$('form').ajaxForm(ajaxProjectImageListOptions);
+});
+</script>

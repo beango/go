@@ -1,0 +1,37 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/role/rolepost" method="post">
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<br>
+		<input type="hidden" name="role.RoleID" value="{{.role.RoleID}}" />
+		<div class="control-group">
+			<div class="control-label">角色名</div>
+			<div class="controls">
+				<input type="text" name="role.RoleName" value="{{.role.RoleName}}" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn"
+				onclick="location.href='/role/list';return false;">取消</button>
+		</div>
+
+	</section>
+</div>
+</form>
+<script type="text/javascript">
+// wait for the DOM to be loaded
+$(document).ready(function() {
+	var ajaxProjectImageListOptions = {
+		dataType : 'json',
+		success : function(result) {
+			alert(result);
+			location.href = "/role/list";
+		}
+	};
+	$('form').ajaxForm(ajaxProjectImageListOptions);
+});
+</script>

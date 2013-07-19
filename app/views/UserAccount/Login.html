@@ -1,0 +1,43 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<form class="form-horizontal" action="/user/userlog" method="post">
+<div class="container">
+{{template "menu.html" .}}	
+	<form action="login.action" method="post" class="form-horizontal">
+		<div class="control-group">
+			<div class="control-label">用户名:</div>
+			<div class="controls">
+				<input type="text" label="username" name="UserLogin.UserName" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">密 码:</div>
+			<div class="controls">
+				<input type="text" name="UserLogin.UserPwd" />
+			</div>
+		</div>
+		<div class="form-actions">
+			<input type="submit" class="btn btn-primary" value="登录" /> <input
+				value="重置" type="reset" /> <span style="color:red" id="txterr"></span>
+		</div>
+	</form>
+</div>
+</form>
+
+<script type="text/javascript">
+	// wait for the DOM to be loaded
+	$(document).ready(function() {
+		var ajaxProjectImageListOptions = {
+			dataType : 'json',
+			success : function(result) {
+				alert(result);
+				if (result.res) {
+					location.href = "/user/list";
+				} else
+					$("#txterr").html("登录失败");
+			}
+		};
+		$('form').ajaxForm(ajaxProjectImageListOptions);
+	});
+</script>

@@ -1,0 +1,49 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<div class="container">
+{{template "menu.html" .}}
+<section id="list">
+	<h2 style="float: left;">产品目录列表</h2>
+	<p style="position: relative; height: 36px;">
+		<a href="/cate/add"
+			style="position:absolute; margin-left:10px; bottom:6px;">新目录</a>
+	</p>
+
+	<table class="table table-striped">
+		<tr>
+			<th>目录ＩＤ</th>
+			<th>目录名</th>
+			<th>说明</th>
+			<th></th>
+		</tr>
+		{{range .list}}
+			<tr>
+				<td>{{.CategoryID}}</td>
+				<td>{{.CategoryName}}</td>
+				<td>{{.Description}}</td>
+				<td><a href="/cate/modify/{{.CategoryID}}" id="href">修改
+			</a> | <a onclick="catedel('{{.CategoryID}}');return false;"
+						href="#">删除 </a></td>
+			</tr>
+		{{end}}
+	</table>
+</section>
+</div>
+
+<script type="text/javascript">
+	function catedel(id) {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			url : "/cate/del/",
+			data : {
+				id : id
+			},
+			success : function(res) {
+				alert(res);
+				location.href = "/cate/list";
+			}
+		});
+	}
+</script>

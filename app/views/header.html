@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{{.title}}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="/public/Skin/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/public/Skin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+	<link href="/public/Skin/bootstrap/css/docs.css" rel="stylesheet" type="text/css" />
+	
+    <script src="/public/Scripts/jquery-1.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/public/Scripts/jquery.form.js" type="text/javascript" charset="utf-8"></script>
+    {{range .moreStyles}}
+      <link rel="stylesheet" type="text/css" href="/public/{{.}}">
+    {{end}}
+    {{range .moreScripts}}
+      <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+    {{end}}
+  </head>
+  <body data-spy="scroll" data-target=".subnav" data-offset="50">

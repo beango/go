@@ -1,0 +1,87 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+<style type="text/css">
+.pagination ul>li>input {
+	vertical-align: top;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	height: auto;
+	*height: 22px;
+	margin-bottom: 0px;
+	background-color: #fff;
+	border-left-width: 0;
+	width: 40px;
+	float: left;
+	min-height: auto;
+	*min-height: 22px;
+	padding-top:12px;
+}
+</style>
+<div class="container">
+{{template "menu.html" .}}
+	<h2 style="float: left;">产品列表</h2>
+	<p style="position: relative; height: 36px;">
+		<a href="/product/add"
+			style="position:absolute; margin-left:10px; bottom:6px;">新产品</a>
+	</p>
+	<table class="table table-striped">
+		<tr>
+			<th>产品ＩＤ</th>
+			<th>产品名称</th>
+			<th>供应商</th>
+			<th>目录</th>
+			<th>单位数量</th>
+			<th>单价</th>
+			<th>库存</th>
+			<th>是否停产</th>
+			<th></th>
+		</tr>
+		{{range .list}}
+			<tr>
+				<td>{{.ProductID}}</td>
+				<td>{{.ProductName}}</td>
+				<td>{{.SupplierID}}</td>
+				<td>{{.CateName}}</td>
+				<td>{{.QuantityPerUnit}}</td>
+				<td>{{.UnitPrice}}</td>
+				<td>{{.UnitsInStock}}</td>
+				<td>{{if eq .Discontinued "1"}}是{{else}}否{{end}}</td>
+				<td><a href="/product/modify/{{.ProductID}}">修改
+				</a> | <a href="#" onclick="javascript:proddel('{{.ProductID}}');return false;">删除 </a></td>
+			</tr>
+		{{end}}
+	</table>
+
+	<div class="pagination pagination-right">
+		<ul>
+			<li><a href="#" style="color:#000;cursor:text;">总记录数：{{.pagecount}}</a></li>
+			<li{{if lte .pageindex 1}} class="disabled"{{end}}><a href="/product/list">首页</a></li>
+			<li{{if lte .pageindex 1}} class="disabled"{{end}}><a href="/product/list/{{de .pageindex 1}}">Previous</a></li>
+			{{range .pagelist}}
+			<li{{if equ . 0}} class="disabled"{{end}}><a href="/product/list/{{.}}">{{.}}</a></li>
+			{{end}}
+			<li{{if gte .pageindex .totalPage}} class="disabled"{{end}}><a href="/product/list/{{de .pageindex -1}}">Next</a></li>
+			<li{{if gte .pageindex .totalPage}} class="disabled"{{end}}><a href="/product/list//{{.totalPage}}">尾页</a></li>
+			<li><input type="text" class="input" id="topage" value="{{.pageindex}}" /></li>
+			<li><a href="javascript:void();" onclick="location.href='/product/list/'+$('#topage').val();return false;">Go</a></li>
+		</ul>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function proddel(id) {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			url : "/product/del/",
+			data : {
+				id : id
+			},
+			success : function(res) {
+				alert(res);
+				location.href = "/product/list";
+			}
+		});
+	}
+</script>

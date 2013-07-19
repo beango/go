@@ -1,0 +1,50 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+	
+<div class="container">
+{{template "menu.html" .}}
+	<section id="list">
+		<h2 style="float: left;">角色列表</h2>
+		<p style="position: relative; height: 36px;">
+			<a href="/role/add"
+				style="position:absolute; margin-left:10px; bottom:6px;">新角色</a>
+		</p>
+
+		<table class="table table-striped">
+			<tr>
+				<th>角色ＩＤ</th>
+				<th>角色名</th>
+				<th></th>
+			</tr>
+			{{range .list}}
+				<tr>
+					<td>{{.RoleID}}</td>
+					<td>{{.RoleName}}</td>
+					<td><s:a href="role!roleauth.action?id=%{#role.getRoleID()}"
+							id="href">权限
+				</s:a> | <a href="/role/modify/{{.RoleID}}" id="href">修改
+				</a> | <a href="#"
+							onclick="roledel('{{.RoleID}}');return false;"
+							id="href">删除 </a></td>
+				</tr>
+			{{end}}
+		</table>
+	</section>
+</div>
+
+<script type="text/javascript">
+	function roledel(id) {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			url : "/role/del/",
+			data : {
+				id : id
+			},
+			success : function(res) {
+				alert(res);
+				location.href = "/role/list";
+			}
+		});
+	}
+</script>
