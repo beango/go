@@ -3,7 +3,10 @@ package controllers
 import ( 
   "github.com/robfig/revel" 
   "myapp/app/models" 
+  "myapp/app/utils" 
   "strconv"
+  "encoding/base64"
+  "encoding/json"
 )
 
 type Product struct { 
@@ -11,10 +14,26 @@ type Product struct {
 }
 
 func (c Product) checkUser() revel.Result {
-  if userInfo := c.Session["UserInfo"]; userInfo == "" {
+  userInfo := c.Session["UserInfo"]
+  if userInfo == "" {
       c.Flash.Error("Please login in first")
       return c.Redirect(App.Login)
   }
+
+  deskey, _ := revel.Config.String("deskey") 
+  key := []byte(deskey)
+
+  origData, err := base64.StdEncoding.DecodeString(userInfo)
+  userstats, _ := utils.DesDecrypt(origData, key)
+  if err != nil {
+    panic(err)
+  }
+  us := models.UserStats{}
+  err = json.Unmarshal(userstats, &us)
+  if err != nil {
+    panic(err)
+  }
+  c.Flash.Data["UserName"] = us.UserName
   return nil
 }
 
@@ -23,14 +42,13 @@ func (c Product) checkUser() revel.Result {
  */
 func (c *Product) List(pageindex int) revel.Result { 
   dal, _ := models.NewProductDal() 
-  //catedal, _ := models.NewCateDal()
+  catedal, _ := models.NewCateDal()
 
   defer dal.Close()
   
   if pageindex<=0 {
     pageindex = 1
   }
-  userinfo := c.Session["UserInfo"]
 
   list, _, totalPage := dal.List(pageindex,10)//totalRecord
   var pagelist =make([]int, totalPage)
@@ -45,7 +63,9 @@ func (c *Product) List(pageindex int) revel.Result {
       println("found................")
     }
   }*/
-  return c.Render(list, userinfo, pageindex , totalPage, pagelist) 
+  
+  catelist := catedal.List()
+  return c.Render(list, catelist, pageindex , totalPage, pagelist) 
 }
 
 /*
@@ -53,14 +73,17 @@ func (c *Product) List(pageindex int) revel.Result {
  */
 func (c *Product) Add(id int) revel.Result { 
   dal, _ := models.NewProductDal() 
-  
+  catedal, _ := models.NewCateDal()
+
   defer dal.Close()
-  
+
+  catelist := catedal.List()
+
   if id != 0 {
     prod := dal.FindByID(id)
-    return c.Render(prod) 
+    return c.Render(prod, catelist) 
   }
-    return c.Render();
+  return c.Render(catelist);
 }
 
 /*

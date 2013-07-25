@@ -3,7 +3,11 @@ package controllers
 import ( 
   "github.com/robfig/revel" 
   "myapp/app/models" 
+  "myapp/app/utils" 
   "strconv"
+  "encoding/base64"
+  "encoding/json"
+  "net/http"
 )
 
 type UserAccount struct { 
@@ -11,25 +15,39 @@ type UserAccount struct {
 }
 
 func (c UserAccount) checkUser() revel.Result {
-  if userInfo := c.Session["UserInfo"]; userInfo == "" {
+  userInfo := c.Session["UserInfo"]
+  if userInfo == "" {
       c.Flash.Error("Please login in first")
       return c.Redirect(App.Login)
   }
+
+  deskey, _ := revel.Config.String("deskey") 
+  key := []byte(deskey)
+
+  origData, err := base64.StdEncoding.DecodeString(userInfo)
+  userstats, _ := utils.DesDecrypt(origData, key)
+  if err != nil {
+    panic(err)
+  }
+  us := models.UserStats{}
+  err = json.Unmarshal(userstats, &us)
+  if err != nil {
+    panic(err)
+  }
+  c.Flash.Data["UserName"] = us.UserName
   return nil
 }
 
 /*
  * 用户列表 
  */
-func (c *UserAccount) List() revel.Result { 
+func (c *UserAccount) List(w http.ResponseWriter, req *http.Request) revel.Result { 
   dal, _ := models.NewUserDal() 
 
   defer dal.Close()
   
   list := dal.List()
-  
-  userinfo := c.Session["UserInfo"]
-  return c.Render(list, userinfo) 
+  return c.Render(list) 
 }
 
 /*
@@ -39,7 +57,7 @@ func (c *UserAccount) Add(id int) revel.Result {
   dal, _ := models.NewUserDal() 
   
   defer dal.Close()
-  
+
   if id != 0 {
     entity := dal.FindByID(id)
     return c.Render(entity) 

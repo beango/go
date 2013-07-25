@@ -3,7 +3,10 @@ package controllers
 import ( 
   "github.com/robfig/revel" 
   "myapp/app/models" 
+  "myapp/app/utils" 
   "strconv"
+  "encoding/base64"
+  "encoding/json"
 )
 
 type Cate struct { 
@@ -11,10 +14,25 @@ type Cate struct {
 }
 
 func (c Cate) checkUser() revel.Result {
-  if userInfo := c.Session["UserInfo"]; userInfo == "" {
+  userInfo := c.Session["UserInfo"]
+  if userInfo == "" {
       c.Flash.Error("Please login in first")
       return c.Redirect(App.Login)
   }
+  deskey, _ := revel.Config.String("deskey") 
+  key := []byte(deskey)
+
+  origData, err := base64.StdEncoding.DecodeString(userInfo)
+  userstats, _ := utils.DesDecrypt(origData, key)
+  if err != nil {
+    panic(err)
+  }
+  us := models.UserStats{}
+  err = json.Unmarshal(userstats, &us)
+  if err != nil {
+    panic(err)
+  }
+  c.Flash.Data["UserName"] = us.UserName
   return nil
 }
 
@@ -27,8 +45,7 @@ func (c *Cate) List() revel.Result {
   defer dal.Close()
   
   list := dal.List()
-  userinfo := c.Session["UserInfo"]
-  return c.Render(list, userinfo) 
+  return c.Render(list) 
 }
 
 /*
@@ -38,7 +55,7 @@ func (c *Cate) Add(id int) revel.Result {
   dal, _ := models.NewCateDal() 
   
   defer dal.Close()
-  
+
   if id != 0 {
     cate := dal.FindByID(id)
     return c.Render(cate) 

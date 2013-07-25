@@ -16,5 +16,4 @@ type Product struct {
 	UnitsOnOrder int "unitsOnOrder"
 	ReorderLevel int "reorderLevel"
 	Discontinued string "discontinued"
-  CateName string 
 }

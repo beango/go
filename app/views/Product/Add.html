@@ -22,13 +22,12 @@
 		<div class="control-group">
 			<div class="control-label">目录</div>
 			<div class="controls">
-				{{with $field := field "booking.Beds" .}}
-				<select name="{{$field.Name}}">
-				  {{option $field "1" "One king-size bed"}}
-				  {{option $field "2" "Two double beds"}}
-				  {{option $field "3" "Three beds"}}
-				</select>
+				<input type="hidden" id="cateid" value="{{.prod.CategoryID}}" />
+				<select name="prod.CategoryID">
+				{{range .catelist}}
+				  <option value="{{.CategoryID}}">{{.CategoryName}}</option>
 				{{end}}
+				</select>
 			</div>
 		</div>
 		<div class="control-group">
@@ -69,15 +68,14 @@
 		<div class="control-group">
 			<div class="control-label">是否停产</div>
 			<div class="controls">
-				<s:radio list="#{1:'是',0:'否' }" name="product.discontinued"
-					label="是否停产" listKey="key" listValue="value"
-					value="%{#request.product.getDiscontinued()}" cssClass=""></s:radio>
+				<input type="radio" name="prod.Discontinued" value="0"{{if eq .prod.Discontinued "0"}}checked="checked"{{end}} />否
+				<input type="radio" name="prod.Discontinued" value="1"{{if eq .prod.Discontinued "1"}}checked="checked"{{end}} />是
 			</div>
 		</div>
 		<div class="form-actions">
 			<button type="submit" class="btn btn-primary">保存更改</button>
 			<button class="btn"
-				onclick="location.href='product!list.action';return false;">取消</button>
+				onclick="location.href='/product/list';return false;">取消</button>
 		</div>
 
 	</section>
@@ -86,6 +84,8 @@
 <script type="text/javascript">
 // wait for the DOM to be loaded
 $(document).ready(function() {
+	$("select[name='prod.CategoryID']").val($("#cateid").val());
+
 	var ajaxProjectImageListOptions = {
 		dataType : 'json',
 		success : function(result) {

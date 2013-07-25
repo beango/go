@@ -42,13 +42,13 @@
 				<td>{{.ProductID}}</td>
 				<td>{{.ProductName}}</td>
 				<td>{{.SupplierID}}</td>
-				<td>{{.CateName}}</td>
+				<td><input type="hidden" value="{{.CategoryID}}"/><label class="CateName"></label></td>
 				<td>{{.QuantityPerUnit}}</td>
 				<td>{{.UnitPrice}}</td>
 				<td>{{.UnitsInStock}}</td>
 				<td>{{if eq .Discontinued "1"}}是{{else}}否{{end}}</td>
 				<td><a href="/product/modify/{{.ProductID}}">修改
-				</a> | <a href="#" onclick="javascript:proddel('{{.ProductID}}');return false;">删除 </a></td>
+				</a> | <a href="#" onclick="javascript:proddel('{{.ProductID}}');return false;">删除</a></td>
 			</tr>
 		{{end}}
 	</table>
@@ -59,7 +59,7 @@
 			<li{{if lte .pageindex 1}} class="disabled"{{end}}><a href="/product/list">首页</a></li>
 			<li{{if lte .pageindex 1}} class="disabled"{{end}}><a href="/product/list/{{de .pageindex 1}}">Previous</a></li>
 			{{range .pagelist}}
-			<li{{if equ . 0}} class="disabled"{{end}}><a href="/product/list/{{.}}">{{.}}</a></li>
+			<li{{if equ . 0}} class="disabled"{{end}} id="page{{.}}"><a href="/product/list/{{.}}">{{.}}</a></li>
 			{{end}}
 			<li{{if gte .pageindex .totalPage}} class="disabled"{{end}}><a href="/product/list/{{de .pageindex -1}}">Next</a></li>
 			<li{{if gte .pageindex .totalPage}} class="disabled"{{end}}><a href="/product/list//{{.totalPage}}">尾页</a></li>
@@ -70,6 +70,19 @@
 </div>
 
 <script type="text/javascript">
+	$(function(){
+		var pageindex = "{{.pageindex}}";
+		$("#page"+pageindex).attr("class", "disabled");
+
+		var catelist = {{.catelist}};
+		$(".table.table-striped").find("tr").find(".CateName").each(function(){
+			var cateID = $(this).prev().val();
+			for(var i=0; i<catelist.length; i++){
+				if (catelist[i]["CategoryID"]==cateID)
+					$(this).text(catelist[i]["CategoryName"])
+			}
+		});
+	});
 	function proddel(id) {
 		$.ajax({
 			type : "POST",

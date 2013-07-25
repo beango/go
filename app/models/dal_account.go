@@ -26,13 +26,15 @@ func (d *UserDal) FindByID(id int) User {
 /*
  * 检查用户登录
  */
-func (d *UserDal) CheckLogin(user *UserLogin) error { 
+func (d *UserDal) CheckLogin(user *UserLogin) (User, error) { 
+  result := User{}
+
   uc := d.session.DB(DbName).C(UserCollection)
-  i, _ := uc.Find(bson.M{"userName": user.UserName, "userPwd": user.UserPwd}).Count()
-  if i>0 {
-    return nil
+  err := uc.Find(bson.M{"userName": user.UserName, "userPwd": user.UserPwd}).One(&result)
+  if err == nil {
+    return result, nil
   } else {
-    return errors.New("用户名不存在或密码不正确")
+    return result, err
   }
 }
 

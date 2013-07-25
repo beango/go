@@ -15,3 +15,8 @@ type User struct {
   UserName string "userName"
   UserPwd  string "userPwd"
 }
+
+type UserStats struct { 
+  UserID   int "userID"
+  UserName string "userName"
+}
